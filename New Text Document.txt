@@ -1,0 +1,58 @@
+Private Sub Worksheet_Activate()
+
+Cells.ClearContents
+Dim vaFolder(1 To 2000, 0) As String    '
+Dim arr(1 To 65000, 1 To 11)
+Dim i1&, I2&
+Dim fName$
+    i1 = 1: I2 = 1
+    vaFolder(i1, 0) = ThisWorkbook.Path & "\入库清单\"     '
+    Do
+        fName = Dir(vaFolder(i1, 0), vbDirectory)
+        Do While fName <> ""
+            If fName <> "." And fName <> ".." Then
+                If (GetAttr(vaFolder(i1, 0) & fName) And vbDirectory) = vbDirectory Then
+                    I2 = I2 + 1
+                Else
+                    If Not fName Like "*" & ThisWorkbook.Name & "*" Then
+                    Workbooks.Open vaFolder(i1, 0) & fName
+                    For Each s In ActiveWorkbook.Sheets
+                      If s.UsedRange.Rows.Count > 1 Then
+                      Rng = s.UsedRange
+                      For r = 2 To UBound(Rng)
+                         For C = 1 To UBound(Rng, 2)
+                            If Rng(r, C) <> "" Then
+                                tr = tr + 1
+                                'arr(tr+1, 10) = fName
+                                'arr(tr+1, 11) = s.Name
+                                For CC = 0 To UBound(Rng, 2) - C
+                                        arr(tr + 1, CC + 2) = Rng(r, C + CC)
+                                Next CC
+                                Exit For
+                            End If
+                          Next C
+                      Next r
+                      End If
+                    Next
+                    ActiveWorkbook.Close False
+                    End If
+                End If
+            End If
+            fName = Dir(, vbDirectory)    '
+        Loop    '
+        i1 = i1 + 1    '
+    Loop Until i1 > I2
+    Range("a1").Resize(tr + 1, 10) = arr
+   
+        
+    Cells(1, 1) = "部件编号"
+    Cells(1, 2) = "部件类别"
+    Cells(1, 3) = "厂家"
+    Cells(1, 4) = "部件型号"
+    Cells(1, 5) = "入库数量"
+    Cells(1, 6) = "入库日期"
+    Cells(1, 7) = "入库人员"
+    Cells(1, 8) = "项目号"
+    Cells(1, 9) = "备注"
+            
+End Sub
