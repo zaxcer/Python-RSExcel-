@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+#-*- coding: utf-8 -*-
 
 import xlrd
 import xlwt
@@ -52,6 +52,9 @@ class DetectStringFromExcel(object):
 
                 the_bad_row.insert(0, sheet.name)  # 在行开头添加sheet name
                 temp_list.append(the_bad_row)
+            
+
+
         return temp_list
 
 
@@ -71,10 +74,10 @@ class WriteToNewExcel(object):
         for row in range(self.rows):
             self._writeonerow(row+1, self.list_to_write[row])
         # 设置表的列宽
-        self.sheet.col(0).width = 2500
+        self.sheet.col(0).width = 3000
         self.sheet.col(2).width = 3000
-        self.sheet.col(3).width = 3000
-        self.sheet.col(4).width = 5000
+        self.sheet.col(3).width = 4500
+        self.sheet.col(4).width = 6000
         self.sheet.col(8).width = 3000
         self.sheet.col(9).width = 3000
         self.sheet.col(10).width = 3000
@@ -109,7 +112,9 @@ if __name__ == '__main__':
 
     # 全部文件
     abspath = sys.path[0]
+    
     allfilelist = os.listdir(abspath)
+    
     # 鉴别所需文件
     filelist = detect_name(allfilelist)
     print('采购清单Excel文件为: ')
@@ -126,11 +131,11 @@ if __name__ == '__main__':
     print('匹配字段完成...')
 
     # 从暂存列表写入新Excel
-    newpath = abspath + '/Results.xls'
+    newpath = abspath + '\Results.xls'
     wt = WriteToNewExcel(newlist, path=newpath)
     wt.writein()
     print('写入新文件完成...')
 
     #打开新文件Excel
     print('正在打开新文件...')
-    os.system('open '+newpath)
+    os.system(newpath)
